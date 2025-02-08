@@ -1,0 +1,46 @@
+# Import library yang diperlukan
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Langkah 1: Upload gambar ke Google Colab
+from google.colab import files
+uploaded = files.upload()
+
+# Langkah 2: Baca gambar menggunakan OpenCV
+image_path = list(uploaded.keys())[0]  # Ambil nama file yang diupload
+image = cv2.imread(image_path)
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Konversi ke RGB
+
+# Langkah 3: Tentukan titik-titik asli (source points) dan titik-titik target (destination points)
+height, width = image.shape[:2]
+
+# Titik-titik asli (misalnya, sudut-sudut gambar)
+src_points = np.float32([[0, 0], [width - 1, 0], [0, height - 1], [width - 1, height - 1]])
+
+# Titik-titik target (mengubah perspektif)
+dst_points = np.float32([[0, 0], [width - 1, 0], [int(0.33 * width), height - 1], [int(0.66 * width), height - 1]])
+
+# Langkah 4: Hitung matriks transformasi perspektif
+perspective_matrix = cv2.getPerspectiveTransform(src_points, dst_points)
+
+# Langkah 5: Terapkan transformasi perspektif
+perspective_image = cv2.warpPerspective(image_rgb, perspective_matrix, (width, height))
+
+# Langkah 6: Tampilkan gambar asli dan hasil transformasi
+plt.figure(figsize=(10, 5))
+
+# Gambar asli
+plt.subplot(1, 2, 1)
+plt.imshow(image_rgb)
+plt.title("Gambar Asli")
+plt.axis('off')
+
+# Gambar hasil transformasi perspektif
+plt.subplot(1, 2, 2)
+plt.imshow(perspective_image)
+plt.title("Transformasi Perspektif")
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
