@@ -1,0 +1,89 @@
+# Import library yang diperlukan
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Langkah 1: Memuat citra dari URL atau file lokal
+url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png'
+
+# Mengunduh gambar dari URL
+import urllib.request
+urllib.request.urlretrieve(url, "google_logo.png")
+
+# Membaca citra menggunakan OpenCV
+image = cv2.imread("google_logo.png")
+
+# Konversi citra dari BGR (default OpenCV) ke RGB
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+# Langkah 2: Menampilkan citra asli
+plt.figure(figsize=(8, 6))
+plt.title("Citra Asli")
+plt.imshow(image_rgb)
+plt.axis('off')
+plt.show()
+
+# Langkah 3: Cropping (Memotong Citra)
+cropped_image = image_rgb[50:200, 50:300]  # Potong area tertentu (y1:y2, x1:x2)
+
+# Menampilkan citra hasil cropping
+plt.figure(figsize=(8, 6))
+plt.title("Citra Hasil Cropping")
+plt.imshow(cropped_image)
+plt.axis('off')
+plt.show()
+
+# Langkah 4: Resizing (Mengubah Ukuran Citra)
+new_size = (300, 300)  # Ukuran baru (lebar, tinggi)
+resized_image = cv2.resize(image_rgb, new_size)
+
+# Menampilkan citra hasil resizing
+plt.figure(figsize=(8, 6))
+plt.title("Citra Hasil Resizing")
+plt.imshow(resized_image)
+plt.axis('off')
+plt.show()
+
+# Langkah 5: Flipping (Membalik Citra)
+flipped_horizontal = cv2.flip(image_rgb, 1)  # Flip horizontal
+flipped_vertical = cv2.flip(image_rgb, 0)    # Flip vertikal
+
+# Menampilkan citra hasil flipping
+plt.figure(figsize=(12, 6))
+
+plt.subplot(1, 2, 1)
+plt.title("Flip Horizontal")
+plt.imshow(flipped_horizontal)
+plt.axis('off')
+
+plt.subplot(1, 2, 2)
+plt.title("Flip Vertikal")
+plt.imshow(flipped_vertical)
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
+
+# Langkah 6: Rotasi (Memutar Citra)
+(h, w) = image_rgb.shape[:2]
+center = (w // 2, h // 2)  # Titik pusat rotasi
+angle = 45  # Sudut rotasi (dalam derajat)
+scale = 1.0  # Skala ukuran setelah rotasi
+
+# Matriks rotasi
+rotation_matrix = cv2.getRotationMatrix2D(center, angle, scale)
+rotated_image = cv2.warpAffine(image_rgb, rotation_matrix, (w, h))
+
+# Menampilkan citra hasil rotasi
+plt.figure(figsize=(8, 6))
+plt.title("Citra Hasil Rotasi")
+plt.imshow(rotated_image)
+plt.axis('off')
+plt.show()
+
+# Langkah 7: Menyimpan citra hasil proses
+cv2.imwrite("cropped_image.jpg", cv2.cvtColor(cropped_image, cv2.COLOR_RGB2BGR))
+cv2.imwrite("resized_image.jpg", cv2.cvtColor(resized_image, cv2.COLOR_RGB2BGR))
+cv2.imwrite("rotated_image.jpg", cv2.cvtColor(rotated_image, cv2.COLOR_RGB2BGR))
+
+print("Proses selesai! Citra hasil proses telah disimpan.")
