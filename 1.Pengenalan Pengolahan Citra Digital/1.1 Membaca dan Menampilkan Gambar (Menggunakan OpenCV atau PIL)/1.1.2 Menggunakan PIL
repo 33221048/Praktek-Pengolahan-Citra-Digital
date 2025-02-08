@@ -1,0 +1,17 @@
+# Import library yang diperlukan
+from PIL import Image
+import matplotlib.pyplot as plt
+
+# Langkah 1: Upload gambar ke Google Colab
+from google.colab import files
+uploaded = files.upload()
+
+# Langkah 2: Baca gambar menggunakan PIL
+image_path = list(uploaded.keys())[0]  # Ambil nama file yang diupload
+image = Image.open(image_path)
+
+# Langkah 3: Tampilkan gambar menggunakan matplotlib
+plt.imshow(image)
+plt.title("Gambar dengan PIL")
+plt.axis('off')  # Matikan sumbu x dan y
+plt.show()
