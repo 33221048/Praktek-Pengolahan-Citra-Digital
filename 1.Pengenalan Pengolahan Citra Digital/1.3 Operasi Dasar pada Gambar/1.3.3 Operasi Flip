@@ -1,0 +1,39 @@
+# Import library yang diperlukan
+from PIL import Image, ImageOps
+import matplotlib.pyplot as plt
+
+# Langkah 1: Upload gambar ke Google Colab
+from google.colab import files
+uploaded = files.upload()
+
+# Langkah 2: Baca gambar menggunakan PIL
+image_path = list(uploaded.keys())[0]  # Ambil nama file yang diupload
+image = Image.open(image_path)
+
+# Langkah 3: Flip gambar
+flipped_horizontal = ImageOps.mirror(image)  # Flip horizontal
+flipped_vertical = ImageOps.flip(image)     # Flip vertikal
+
+# Langkah 4: Tampilkan gambar asli dan hasil flip
+plt.figure(figsize=(15, 5))
+
+# Gambar asli
+plt.subplot(1, 3, 1)
+plt.imshow(image)
+plt.title("Gambar Asli")
+plt.axis('off')
+
+# Gambar hasil flip horizontal
+plt.subplot(1, 3, 2)
+plt.imshow(flipped_horizontal)
+plt.title("Flip Horizontal")
+plt.axis('off')
+
+# Gambar hasil flip vertikal
+plt.subplot(1, 3, 3)
+plt.imshow(flipped_vertical)
+plt.title("Flip Vertikal")
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
