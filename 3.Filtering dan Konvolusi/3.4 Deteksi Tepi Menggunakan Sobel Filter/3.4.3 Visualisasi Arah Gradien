@@ -1,0 +1,41 @@
+# Import library yang diperlukan
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Langkah 1: Upload gambar ke Google Colab
+from google.colab import files
+uploaded = files.upload()
+
+# Langkah 2: Baca gambar menggunakan OpenCV
+image_path = list(uploaded.keys())[0]  # Ambil nama file yang diupload
+image = cv2.imread(image_path)
+image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # Konversi ke grayscale
+
+# Langkah 3: Terapkan Sobel Filter
+sobel_x = cv2.Sobel(image_gray, cv2.CV_64F, 1, 0, ksize=3)
+sobel_y = cv2.Sobel(image_gray, cv2.CV_64F, 0, 1, ksize=3)
+
+# Langkah 4: Hitung arah gradien
+angle = np.arctan2(sobel_y, sobel_x)  # Arah gradien dalam radian
+angle_deg = np.degrees(angle)  # Konversi ke derajat
+
+# Langkah 5: Tampilkan hasil visualisasi arah gradien
+plt.figure(figsize=(10, 5))
+
+# Arah gradien
+plt.subplot(1, 2, 1)
+plt.imshow(angle_deg, cmap='hsv')  # Gunakan colormap HSV untuk visualisasi arah
+plt.title("Arah Gradien (HSV)")
+plt.axis('off')
+
+# Magnitude gradien
+plt.subplot(1, 2, 2)
+magnitude = np.sqrt(sobel_x**2 + sobel_y**2)
+magnitude = np.uint8(magnitude / magnitude.max() * 255)
+plt.imshow(magnitude, cmap='gray')
+plt.title("Magnitude Gradien")
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
