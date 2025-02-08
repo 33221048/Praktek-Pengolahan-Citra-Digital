@@ -1,0 +1,36 @@
+# Import library yang diperlukan
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Langkah 1: Upload gambar ke Google Colab
+from google.colab import files
+uploaded = files.upload()
+
+# Langkah 2: Baca gambar menggunakan OpenCV
+image_path = list(uploaded.keys())[0]  # Ambil nama file yang diupload
+image = cv2.imread(image_path)
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Konversi ke RGB
+image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # Konversi ke grayscale
+
+# Langkah 3: Terapkan mean filter
+kernel_size = 5  # Ukuran kernel (misalnya 5x5)
+smoothed_image = cv2.blur(image_gray, (kernel_size, kernel_size))
+
+# Langkah 4: Tampilkan gambar asli dan hasil smoothing
+plt.figure(figsize=(10, 5))
+
+# Gambar asli
+plt.subplot(1, 2, 1)
+plt.imshow(image_gray, cmap='gray')
+plt.title("Gambar Asli (Grayscale)")
+plt.axis('off')
+
+# Gambar hasil smoothing
+plt.subplot(1, 2, 2)
+plt.imshow(smoothed_image, cmap='gray')
+plt.title(f"Smoothing (Mean Filter {kernel_size}x{kernel_size})")
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
