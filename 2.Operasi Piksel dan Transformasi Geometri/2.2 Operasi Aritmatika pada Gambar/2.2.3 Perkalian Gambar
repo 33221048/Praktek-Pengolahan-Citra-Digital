@@ -1,0 +1,44 @@
+# Langkah 1: Upload dua gambar ke Google Colab
+from google.colab import files
+uploaded = files.upload()
+
+# Langkah 2: Baca gambar menggunakan PIL dan konversi ke array NumPy
+image1_path = list(uploaded.keys())[0]  # Ambil nama file gambar pertama
+image2_path = list(uploaded.keys())[1]  # Ambil nama file gambar kedua
+
+image1 = Image.open(image1_path).convert("L")  # Konversi ke grayscale
+image2 = Image.open(image2_path).convert("L")  # Konversi ke grayscale
+
+image1_array = np.array(image1)
+image2_array = np.array(image2)
+
+# Langkah 3: Lakukan perkalian gambar
+product_image_array = image1_array * image2_array
+product_image_array = np.clip(product_image_array, 0, 255)  # Batasi nilai antara 0-255
+
+# Langkah 4: Konversi kembali ke format gambar
+product_image = Image.fromarray(product_image_array.astype('uint8'))
+
+# Langkah 5: Tampilkan gambar asli dan hasil perkalian
+plt.figure(figsize=(15, 5))
+
+# Gambar pertama
+plt.subplot(1, 3, 1)
+plt.imshow(image1, cmap='gray')
+plt.title("Gambar 1")
+plt.axis('off')
+
+# Gambar kedua
+plt.subplot(1, 3, 2)
+plt.imshow(image2, cmap='gray')
+plt.title("Gambar 2")
+plt.axis('off')
+
+# Hasil perkalian
+plt.subplot(1, 3, 3)
+plt.imshow(product_image, cmap='gray')
+plt.title("Hasil Perkalian")
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
