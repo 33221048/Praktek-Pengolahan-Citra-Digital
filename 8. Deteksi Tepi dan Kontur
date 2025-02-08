@@ -1,0 +1,59 @@
+# Import library yang diperlukan
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Langkah 1: Memuat citra dari URL atau file lokal
+url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png'
+
+# Mengunduh gambar dari URL
+import urllib.request
+urllib.request.urlretrieve(url, "google_logo.png")
+
+# Membaca citra menggunakan OpenCV
+image = cv2.imread("google_logo.png", cv2.IMREAD_GRAYSCALE)
+
+# Langkah 2: Menampilkan citra asli
+plt.figure(figsize=(8, 6))
+plt.title("Citra Asli")
+plt.imshow(image, cmap='gray')
+plt.axis('off')
+plt.show()
+
+# Langkah 3: Deteksi Tepi dengan Sobel
+sobel_x = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=3)  # Gradien horizontal
+sobel_y = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=3)  # Gradien vertikal
+
+# Menggabungkan hasil Sobel X dan Y
+sobel_combined = cv2.magnitude(sobel_x, sobel_y)
+sobel_combined = np.uint8(sobel_combined / sobel_combined.max() * 255)  # Normalisasi ke [0, 255]
+
+# Menampilkan hasil deteksi tepi dengan Sobel
+plt.figure(figsize=(8, 6))
+plt.title("Deteksi Tepi dengan Sobel")
+plt.imshow(sobel_combined, cmap='gray')
+plt.axis('off')
+plt.show()
+
+# Langkah 4: Deteksi Tepi dengan Canny
+edges_canny = cv2.Canny(image, threshold1=100, threshold2=200)
+
+# Menampilkan hasil deteksi tepi dengan Canny
+plt.figure(figsize=(8, 6))
+plt.title("Deteksi Tepi dengan Canny")
+plt.imshow(edges_canny, cmap='gray')
+plt.axis('off')
+plt.show()
+
+# Langkah 5: Deteksi Tepi dengan Laplacian
+laplacian = cv2.Laplacian(image, cv2.CV_64F)
+laplacian = np.uint8(np.absolute(laplacian))  # Konversi ke nilai absolut dan normalisasi
+
+# Menampilkan hasil deteksi tepi dengan Laplacian
+plt.figure(figsize=(8, 6))
+plt.title("Deteksi Tepi dengan Laplacian")
+plt.imshow(laplacian, cmap='gray')
+plt.axis('off')
+plt.show()
+
+print("Proses selesai! Anda telah melakukan deteksi tepi menggunakan Sobel, Canny, dan Laplacian.")
