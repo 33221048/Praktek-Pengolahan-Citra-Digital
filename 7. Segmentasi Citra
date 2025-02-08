@@ -1,0 +1,69 @@
+# Import library yang diperlukan
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Langkah 1: Memuat citra dari URL atau file lokal
+url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png'
+
+# Mengunduh gambar dari URL
+import urllib.request
+urllib.request.urlretrieve(url, "google_logo.png")
+
+# Membaca citra menggunakan OpenCV
+image = cv2.imread("google_logo.png")
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+# Langkah 2: Menampilkan citra asli
+plt.figure(figsize=(8, 6))
+plt.title("Citra Asli")
+plt.imshow(image_rgb)
+plt.axis('off')
+plt.show()
+
+# Langkah 3: Segmentasi Berdasarkan Warna (Color-Based Segmentation)
+# Konversi citra ke ruang warna HSV
+hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+# Tentukan rentang warna yang ingin disegmentasi (misalnya, warna merah pada logo Google)
+lower_red = np.array([0, 100, 100])  # Batas bawah warna merah
+upper_red = np.array([10, 255, 255])  # Batas atas warna merah
+
+# Buat mask untuk warna merah
+mask = cv2.inRange(hsv_image, lower_red, upper_red)
+
+# Terapkan mask ke citra asli
+segmented_image = cv2.bitwise_and(image_rgb, image_rgb, mask=mask)
+
+# Menampilkan hasil segmentasi berdasarkan warna
+plt.figure(figsize=(8, 6))
+plt.title("Segmentasi Berdasarkan Warna (Merah)")
+plt.imshow(segmented_image)
+plt.axis('off')
+plt.show()
+
+# Langkah 4: Segmentasi Berdasarkan Thresholding
+# Konversi citra ke grayscale
+gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+# Lakukan binary thresholding
+_, binary_image = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY)
+
+# Menampilkan hasil segmentasi berdasarkan thresholding
+plt.figure(figsize=(8, 6))
+plt.title("Segmentasi Berdasarkan Thresholding")
+plt.imshow(binary_image, cmap='gray')
+plt.axis('off')
+plt.show()
+
+# Langkah 5: Segmentasi Berdasarkan Edge Detection (Canny)
+edges = cv2.Canny(gray_image, threshold1=100, threshold2=200)
+
+# Menampilkan hasil segmentasi berdasarkan edge detection
+plt.figure(figsize=(8, 6))
+plt.title("Segmentasi Berdasarkan Edge Detection (Canny)")
+plt.imshow(edges, cmap='gray')
+plt.axis('off')
+plt.show()
+
+print("Proses selesai! Anda telah melakukan segmentasi citra.")
