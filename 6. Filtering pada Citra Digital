@@ -1,0 +1,59 @@
+# Import library yang diperlukan
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Langkah 1: Memuat citra dari URL atau file lokal
+url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png'
+
+# Mengunduh gambar dari URL
+import urllib.request
+urllib.request.urlretrieve(url, "google_logo.png")
+
+# Membaca citra menggunakan OpenCV
+image = cv2.imread("google_logo.png", cv2.IMREAD_GRAYSCALE)
+
+# Langkah 2: Menampilkan citra asli
+plt.figure(figsize=(8, 6))
+plt.title("Citra Asli")
+plt.imshow(image, cmap='gray')
+plt.axis('off')
+plt.show()
+
+# Langkah 3: Low-Pass Filter (Gaussian Blur)
+blurred_image = cv2.GaussianBlur(image, (5, 5), 0)
+
+# Menampilkan citra hasil low-pass filter
+plt.figure(figsize=(8, 6))
+plt.title("Citra Hasil Low-Pass Filter (Gaussian Blur)")
+plt.imshow(blurred_image, cmap='gray')
+plt.axis('off')
+plt.show()
+
+# Langkah 4: High-Pass Filter (Deteksi Tepi dengan Sobel)
+# Menghitung gradien horizontal dan vertikal
+sobel_x = cv2.Sobel(image, cv2.CV_64F, 1, 0, ksize=3)  # Gradien horizontal
+sobel_y = cv2.Sobel(image, cv2.CV_64F, 0, 1, ksize=3)  # Gradien vertikal
+
+# Menggabungkan hasil Sobel X dan Y
+sobel_combined = cv2.magnitude(sobel_x, sobel_y)
+sobel_combined = np.uint8(sobel_combined / sobel_combined.max() * 255)  # Normalisasi ke [0, 255]
+
+# Menampilkan citra hasil high-pass filter (Sobel)
+plt.figure(figsize=(8, 6))
+plt.title("Citra Hasil High-Pass Filter (Sobel Edge Detection)")
+plt.imshow(sobel_combined, cmap='gray')
+plt.axis('off')
+plt.show()
+
+# Langkah 5: High-Pass Filter (Canny Edge Detection)
+edges = cv2.Canny(image, threshold1=100, threshold2=200)
+
+# Menampilkan citra hasil high-pass filter (Canny)
+plt.figure(figsize=(8, 6))
+plt.title("Citra Hasil High-Pass Filter (Canny Edge Detection)")
+plt.imshow(edges, cmap='gray')
+plt.axis('off')
+plt.show()
+
+print("Proses selesai! Anda telah melakukan filtering pada citra.")
