@@ -1,0 +1,44 @@
+# Import library yang diperlukan
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Langkah 1: Upload gambar ke Google Colab
+from google.colab import files
+uploaded = files.upload()
+
+# Langkah 2: Baca gambar menggunakan OpenCV
+image_path = list(uploaded.keys())[0]  # Ambil nama file yang diupload
+image = cv2.imread(image_path)
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Konversi ke RGB
+
+# Langkah 3: Tentukan titik-titik asli (sudut-sudut dokumen)
+src_points = np.float32([[141, 131], [480, 159], [493, 630], [64, 601]])  # Sesuaikan dengan gambar Anda
+
+# Langkah 4: Tentukan titik-titik target (persegi panjang yang meluruskan dokumen)
+width, height = 400, 600  # Ukuran dokumen setelah diluruskan
+dst_points = np.float32([[0, 0], [width, 0], [width, height], [0, height]])
+
+# Langkah 5: Hitung matriks transformasi perspektif
+perspective_matrix = cv2.getPerspectiveTransform(src_points, dst_points)
+
+# Langkah 6: Terapkan transformasi perspektif
+perspective_image = cv2.warpPerspective(image_rgb, perspective_matrix, (width, height))
+
+# Langkah 7: Tampilkan gambar asli dan hasil transformasi
+plt.figure(figsize=(10, 5))
+
+# Gambar asli
+plt.subplot(1, 2, 1)
+plt.imshow(image_rgb)
+plt.title("Gambar Asli")
+plt.axis('off')
+
+# Gambar hasil transformasi perspektif
+plt.subplot(1, 2, 2)
+plt.imshow(perspective_image)
+plt.title("Dokumen Diluruskan")
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
