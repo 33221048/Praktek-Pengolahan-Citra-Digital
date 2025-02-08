@@ -1,0 +1,69 @@
+# Import library yang diperlukan
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Langkah 1: Memuat citra dari URL atau file lokal
+url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/1200px-Google_2015_logo.svg.png'
+
+# Mengunduh gambar dari URL
+import urllib.request
+urllib.request.urlretrieve(url, "google_logo.png")
+
+# Membaca citra menggunakan OpenCV
+image = cv2.imread("google_logo.png", cv2.IMREAD_GRAYSCALE)
+
+# Langkah 2: Konversi citra ke biner menggunakan thresholding
+_, binary_image = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
+
+# Menampilkan citra biner
+plt.figure(figsize=(8, 6))
+plt.title("Citra Biner")
+plt.imshow(binary_image, cmap='gray')
+plt.axis('off')
+plt.show()
+
+# Langkah 3: Definisikan kernel untuk operasi morfologi
+kernel = np.ones((5, 5), np.uint8)  # Kernel berukuran 5x5
+
+# Langkah 4: Operasi Erosion
+eroded_image = cv2.erode(binary_image, kernel, iterations=1)
+
+# Menampilkan hasil operasi erosion
+plt.figure(figsize=(8, 6))
+plt.title("Hasil Erosion")
+plt.imshow(eroded_image, cmap='gray')
+plt.axis('off')
+plt.show()
+
+# Langkah 5: Operasi Dilation
+dilated_image = cv2.dilate(binary_image, kernel, iterations=1)
+
+# Menampilkan hasil operasi dilation
+plt.figure(figsize=(8, 6))
+plt.title("Hasil Dilation")
+plt.imshow(dilated_image, cmap='gray')
+plt.axis('off')
+plt.show()
+
+# Langkah 6: Operasi Opening
+opened_image = cv2.morphologyEx(binary_image, cv2.MORPH_OPEN, kernel)
+
+# Menampilkan hasil operasi opening
+plt.figure(figsize=(8, 6))
+plt.title("Hasil Opening")
+plt.imshow(opened_image, cmap='gray')
+plt.axis('off')
+plt.show()
+
+# Langkah 7: Operasi Closing
+closed_image = cv2.morphologyEx(binary_image, cv2.MORPH_CLOSE, kernel)
+
+# Menampilkan hasil operasi closing
+plt.figure(figsize=(8, 6))
+plt.title("Hasil Closing")
+plt.imshow(closed_image, cmap='gray')
+plt.axis('off')
+plt.show()
+
+print("Proses selesai! Anda telah melakukan operasi morfologi pada citra biner.")
