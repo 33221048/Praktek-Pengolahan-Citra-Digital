@@ -1,0 +1,39 @@
+# Import library yang diperlukan
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Langkah 1: Upload gambar ke Google Colab
+from google.colab import files
+uploaded = files.upload()
+
+# Langkah 2: Baca gambar menggunakan OpenCV
+image_path = list(uploaded.keys())[0]  # Ambil nama file yang diupload
+image = cv2.imread(image_path)
+image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # Konversi ke RGB
+
+# Langkah 3: Tentukan matriks translasi
+height, width = image.shape[:2]
+tx, ty = 50, 30  # Offset translasi (geser ke kanan 50 piksel, ke bawah 30 piksel)
+translation_matrix = np.float32([[1, 0, tx], [0, 1, ty]])
+
+# Langkah 4: Terapkan translasi
+translated_image = cv2.warpAffine(image_rgb, translation_matrix, (width, height))
+
+# Langkah 5: Tampilkan gambar asli dan hasil translasi
+plt.figure(figsize=(10, 5))
+
+# Gambar asli
+plt.subplot(1, 2, 1)
+plt.imshow(image_rgb)
+plt.title("Gambar Asli")
+plt.axis('off')
+
+# Gambar hasil translasi
+plt.subplot(1, 2, 2)
+plt.imshow(translated_image)
+plt.title(f"Translasi (tx={tx}, ty={ty})")
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
