@@ -1,0 +1,53 @@
+# Import library yang diperlukan
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Langkah 1: Upload gambar ke Google Colab
+from google.colab import files
+uploaded = files.upload()
+
+# Langkah 2: Baca gambar menggunakan PIL dan konversi ke array NumPy
+image_path = list(uploaded.keys())[0]  # Ambil nama file yang diupload
+image = Image.open(image_path).convert("L")  # Konversi ke grayscale
+image_array = np.array(image)
+
+# Langkah 3: Manipulasi brightness dan contrast secara manual
+brightness_factor = 50  # Nilai tambahan untuk brightness
+contrast_factor = 1.5   # Faktor pengali untuk contrast
+
+# Manipulasi brightness
+brightened_array = image_array + brightness_factor
+brightened_array = np.clip(brightened_array, 0, 255)  # Batasi nilai antara 0-255
+
+# Manipulasi contrast
+contrasted_array = (brightened_array - 128) * contrast_factor + 128
+contrasted_array = np.clip(contrasted_array, 0, 255)  # Batasi nilai antara 0-255
+
+# Langkah 4: Konversi kembali ke format gambar
+brightened_image = Image.fromarray(brightened_array.astype('uint8'))
+contrasted_image = Image.fromarray(contrasted_array.astype('uint8'))
+
+# Langkah 5: Tampilkan gambar asli dan hasil manipulasi
+plt.figure(figsize=(15, 5))
+
+# Gambar asli
+plt.subplot(1, 3, 1)
+plt.imshow(image, cmap='gray')
+plt.title("Gambar Asli")
+plt.axis('off')
+
+# Gambar hasil manipulasi brightness
+plt.subplot(1, 3, 2)
+plt.imshow(brightened_image, cmap='gray')
+plt.title(f"Brightness +{brightness_factor}")
+plt.axis('off')
+
+# Gambar hasil manipulasi contrast
+plt.subplot(1, 3, 3)
+plt.imshow(contrasted_image, cmap='gray')
+plt.title(f"Contrast x {contrast_factor}")
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
