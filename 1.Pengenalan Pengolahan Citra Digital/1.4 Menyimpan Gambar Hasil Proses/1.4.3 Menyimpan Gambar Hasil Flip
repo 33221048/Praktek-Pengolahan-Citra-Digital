@@ -1,0 +1,18 @@
+# Import library yang diperlukan
+from PIL import Image, ImageOps
+from google.colab import files
+
+# Langkah 1: Upload gambar ke Google Colab
+uploaded = files.upload()
+image_path = list(uploaded.keys())[0]  # Ambil nama file yang diupload
+image = Image.open(image_path)
+
+# Langkah 2: Flip gambar secara horizontal
+flipped_image = ImageOps.mirror(image)
+
+# Langkah 3: Simpan gambar hasil flip ke direktori Colab
+output_path = "flipped_image.jpg"
+flipped_image.save(output_path)
+
+# Langkah 4: Unduh gambar hasil flip ke komputer lokal
+files.download(output_path)
