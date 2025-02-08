@@ -1,0 +1,32 @@
+# Import library yang diperlukan
+from PIL import Image
+import matplotlib.pyplot as plt
+
+# Langkah 1: Upload gambar ke Google Colab
+from google.colab import files
+uploaded = files.upload()
+
+# Langkah 2: Baca gambar menggunakan PIL
+image_path = list(uploaded.keys())[0]  # Ambil nama file yang diupload
+image = Image.open(image_path)
+
+# Langkah 3: Resize gambar ke ukuran baru
+resized_image = image.resize((100, 100))  # Ubah ukuran menjadi 100x100 piksel
+
+# Langkah 4: Tampilkan gambar asli dan hasil resize
+plt.figure(figsize=(10, 5))
+
+# Gambar asli
+plt.subplot(1, 2, 1)
+plt.imshow(image)
+plt.title("Gambar Asli")
+plt.axis('off')
+
+# Gambar hasil resize
+plt.subplot(1, 2, 2)
+plt.imshow(resized_image)
+plt.title("Gambar Hasil Resize")
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()
